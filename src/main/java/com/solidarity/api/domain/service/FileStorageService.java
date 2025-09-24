@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class FileStorageService {
@@ -19,13 +20,14 @@ public class FileStorageService {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
     }
 
-    public String uploadFile(MultipartFile file) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+    public String uploadFile(MultipartFile file, String subFolder) {
+        String fileName = UUID.randomUUID() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
-            Path targetLocation = fileStorageLocation.resolve(fileName);
+            Path folder = fileStorageLocation.resolve(subFolder);
+            Path targetLocation = folder.resolve(fileName);
             file.transferTo(targetLocation);
-            return targetLocation.toString();
+            return subFolder + "/" +fileName;
         } catch (IOException exception) {
             throw new FileStorageException("Error saving file", exception);
         }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 public class VolunteerRequest extends UserRequest{
         @NotBlank
-        @CPF(message = "Invalid CPF")
+        //@CPF(message = "Invalid CPF")
         private String cpf;
 
         @NotBlank

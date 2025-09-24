@@ -1,6 +1,5 @@
 package com.solidarity.api.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -8,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,4 +37,6 @@ public class OrganizationRequest extends UserRequest{
 
     @URL(message = "URL invalid")
     private String websiteUrl;
+
+    private List<AddressRequest> addressRequests;
 }
