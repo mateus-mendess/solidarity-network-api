@@ -6,10 +6,11 @@ import com.solidarity.api.dto.response.OrganizationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {AddressMapper.class})
 public interface OrganizationMapper {
     @Mapping(target = "profilePhoto", ignore = true)
     @Mapping(target = "coverPhoto", ignore = true)
+    @Mapping(target = "addresses", source = "addresses")
     Organization toOrganization(OrganizationRequest organizationRequest);
 
     @Mapping(target = "email", source = "user.email")

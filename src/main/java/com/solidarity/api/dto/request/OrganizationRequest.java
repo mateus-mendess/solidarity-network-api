@@ -38,5 +38,69 @@ public class OrganizationRequest extends UserRequest{
     @URL(message = "URL invalid")
     private String websiteUrl;
 
-    private List<AddressRequest> addressRequests;
+    private List<AddressRequest> addresses;
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
+
+    public String getCorporateName() {
+        return corporateName;
+    }
+
+    public void setCorporateName(String corporateName) {
+        this.corporateName = corporateName;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public MultipartFile getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(MultipartFile profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public MultipartFile getCoverPhoto() {
+        return coverPhoto;
+    }
+
+    public void setCoverPhoto(MultipartFile coverPhoto) {
+        this.coverPhoto = coverPhoto;
+    }
+
+    public String getWebsiteUrl() {
+        return websiteUrl;
+    }
+
+    public void setWebsiteUrl(String websiteUrl) {
+        this.websiteUrl = websiteUrl;
+    }
+
+    public List<AddressRequest> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressRequest> addresses) {
+        this.addresses = addresses;
+    }
 }

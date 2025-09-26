@@ -18,5 +18,19 @@ public class UserRequest {
             message = "Password must have at least 8 characters, including one letter, one number and one special character")
     private String password;
 
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
