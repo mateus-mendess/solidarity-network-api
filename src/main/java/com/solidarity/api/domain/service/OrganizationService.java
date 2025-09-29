@@ -1,10 +1,14 @@
 package com.solidarity.api.domain.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solidarity.api.domain.entity.Address;
+import com.solidarity.api.domain.entity.Administrator;
 import com.solidarity.api.domain.entity.Organization;
 import com.solidarity.api.domain.entity.User;
 import com.solidarity.api.domain.repository.OrganizationDAO;
+import com.solidarity.api.dto.request.AdministratorRequest;
 import com.solidarity.api.dto.request.OrganizationRequest;
 import com.solidarity.api.dto.response.GeocodingResponse;
 import com.solidarity.api.dto.response.OrganizationResponse;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +37,7 @@ public class OrganizationService {
     private final GeocodingService geocodingService;
     private final ObjectMapper objectMapper;
     private final AddressMapper addressMapper;
+    private final AdministratorService administratorService;
 
     public OrganizationService(OrganizationDAO organizationDAO,
                                OrganizationMapper organizationMapper,
@@ -40,7 +46,8 @@ public class OrganizationService {
                                FileStorageService fileStorageService,
                                GeocodingService geocodingService,
                                ObjectMapper objectMapper,
-                               AddressMapper addressMapper) {
+                               AddressMapper addressMapper,
+                               AdministratorService administratorService) {
         this.organizationDAO = organizationDAO;
         this.organizationMapper = organizationMapper;
         this.userService = userService;
@@ -49,6 +56,7 @@ public class OrganizationService {
         this.geocodingService = geocodingService;
         this.objectMapper = objectMapper;
         this.addressMapper = addressMapper;
+        this.administratorService = administratorService;
     }
 
     @Transactional
@@ -58,15 +66,21 @@ public class OrganizationService {
         userService.save(user, RolesStatus.ROLE_ORGANIZATION);
         Organization organization = organizationMapper.toOrganization(organizationRequest);
         handleUploadPhoto(organizationRequest, organization);
-        for (Address address : organization.getAddresses()) {
-            String coordinates = geocodingService.getCoordinates(address.getPostalCode(), address.getNeighborhood(),
-                    address.getStreet(), address.getCity(), address.getState());
-
-            GeocodingResponse geocodingResponse = objectMapper.readValue(coordinates, GeocodingResponse.class);
-            address = addressMapper.getCoordinatesToAddress(geocodingResponse);
-
-            address.setOrganization(organization);
+        String coordinates = geocodingService.getCoordinates(
+                organizationRequest.getAddress().getPostalCode(),
+                organizationRequest.getAddress().getNeighborhood(),
+                organizationRequest.getAddress().getStreet(),
+                organizationRequest.getAddress().getCity(),
+                organizationRequest.getAddress().getState()
+        );
+        JsonNode root = objectMapper.readTree(coordinates);
+        organization.setLatitude(root.get(0).get("lat").asDouble());
+        organization.setLongitude(root.get(0).get("lon").asDouble());
+        for (AdministratorRequest administratorRequest : organizationRequest.getAdministrators()) {
+            Administrator administrator = administratorService.save(administratorRequest);
+            organization.getAdministrators().add(administrator);
         }
+        organization.setUser(user);
         return organizationMapper.toOrganizationResponse(organizationDAO.save(organization));
     }
 

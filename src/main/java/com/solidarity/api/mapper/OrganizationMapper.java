@@ -10,7 +10,12 @@ import org.mapstruct.Mapping;
 public interface OrganizationMapper {
     @Mapping(target = "profilePhoto", ignore = true)
     @Mapping(target = "coverPhoto", ignore = true)
-    @Mapping(target = "addresses", source = "addresses")
+    @Mapping(target = "postalCode", source = "address.postalCode")
+    @Mapping(target = "neighborhood", source = "address.neighborhood")
+    @Mapping(target = "street", source = "address.street")
+    @Mapping(target = "state", source = "address.state")
+    @Mapping(target = "city", source = "address.city")
+    @Mapping(target = "administrators", ignore = true)
     Organization toOrganization(OrganizationRequest organizationRequest);
 
     @Mapping(target = "email", source = "user.email")

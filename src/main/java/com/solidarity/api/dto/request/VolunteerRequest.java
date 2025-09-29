@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 public class VolunteerRequest extends UserRequest{
         @NotBlank
-        //@CPF(message = "Invalid CPF")
+        @CPF(message = "Invalid CPF")
         private String cpf;
 
         @NotBlank
@@ -43,68 +43,4 @@ public class VolunteerRequest extends UserRequest{
 
 
         private Boolean authorized;
-
-        public String getCpf() {
-                return cpf;
-        }
-
-        public void setCpf(String cpf) {
-                this.cpf = cpf;
-        }
-
-        public String getName() {
-                return name;
-        }
-
-        public void setName(String name) {
-                this.name = name;
-        }
-
-        public String getLastName() {
-                return lastName;
-        }
-
-        public void setLastName(String lastName) {
-                this.lastName = lastName;
-        }
-
-        public LocalDate getBirthday() {
-                return birthday;
-        }
-
-        public void setBirthday(LocalDate birthday) {
-                this.birthday = birthday;
-        }
-
-        public String getGender() {
-                return gender;
-        }
-
-        public void setGender(String gender) {
-                this.gender = gender;
-        }
-
-        public MultipartFile getProfilePhoto() {
-                return profilePhoto;
-        }
-
-        public void setProfilePhoto(MultipartFile profilePhoto) {
-                this.profilePhoto = profilePhoto;
-        }
-
-        public String getWork() {
-                return work;
-        }
-
-        public void setWork(String work) {
-                this.work = work;
-        }
-
-        public Boolean getAuthorized() {
-                return authorized;
-        }
-
-        public void setAuthorized(Boolean authorized) {
-                this.authorized = authorized;
-        }
 }

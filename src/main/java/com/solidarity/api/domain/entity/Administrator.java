@@ -1,6 +1,6 @@
 package com.solidarity.api.domain.entity;
 
-import com.solidarity.api.enums.Gender;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,22 +8,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "volunteer")
 @Entity
-public class Volunteer {
+@Table(name = "administrator")
+public class Administrator {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
-    private User user;
 
     private String cpf;
 
@@ -34,13 +32,8 @@ public class Volunteer {
 
     private LocalDate birthday;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private String gender;
 
-    @Column(name = "profile_photo")
-    private String profilePhoto;
-
-    private String work;
-
-    private Boolean authorized;
+    @ManyToMany(mappedBy = "administrators")
+    private List<Organization> organizations = new ArrayList<>();
 }
