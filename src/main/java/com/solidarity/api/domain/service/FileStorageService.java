@@ -29,7 +29,7 @@ public class FileStorageService {
             file.transferTo(targetLocation);
             return subFolder + "/" +fileName;
         } catch (IOException exception) {
-            throw new FileStorageException("Error saving file", exception);
+            throw new FileStorageException("Error saving file");
         }
     }
 }

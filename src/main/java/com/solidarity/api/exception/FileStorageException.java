@@ -2,12 +2,8 @@ package com.solidarity.api.exception;
 
 import java.io.IOException;
 
-public class FileStorageException extends RuntimeException {
+public class FileStorageException extends SolidarityException {
     public FileStorageException(String message) {
         super(message);
-    }
-
-    public  FileStorageException(String message, Throwable cause) {
-        super(message, cause);
     }
 }
