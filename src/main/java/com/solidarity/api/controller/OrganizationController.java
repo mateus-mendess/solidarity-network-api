@@ -33,6 +33,7 @@ public class OrganizationController {
         organizationRequest.setProfilePhoto(profilePhoto);
         organizationRequest.setCoverPhoto(coverPhoto);
         OrganizationResponse organizationResponse = organizationService.save(organizationRequest);
+
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(organizationResponse.id()).toUri();
         return ResponseEntity.created(uri).body(organizationResponse);
     }

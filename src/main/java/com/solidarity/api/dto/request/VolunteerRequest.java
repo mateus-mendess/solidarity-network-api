@@ -34,6 +34,11 @@ public class VolunteerRequest extends UserRequest{
         message = "Gender provided is invalid")
         private String gender;
 
+        @NotBlank
+        @Pattern(regexp = "^\\(\\d{2}\\)\\d{4,5}-\\d{4}$",
+        message = "Invalid phone number, please check the number")
+        private String phone;
+
         private MultipartFile profilePhoto;
 
         @NotBlank
@@ -43,4 +48,76 @@ public class VolunteerRequest extends UserRequest{
 
 
         private Boolean authorized;
+
+        public String getCpf() {
+                return cpf;
+        }
+
+        public void setCpf(String cpf) {
+                this.cpf = cpf;
+        }
+
+        public String getName() {
+                return name;
+        }
+
+        public void setName(String name) {
+                this.name = name;
+        }
+
+        public String getLastName() {
+                return lastName;
+        }
+
+        public void setLastName(String lastName) {
+                this.lastName = lastName;
+        }
+
+        public LocalDate getBirthday() {
+                return birthday;
+        }
+
+        public void setBirthday(LocalDate birthday) {
+                this.birthday = birthday;
+        }
+
+        public String getGender() {
+                return gender;
+        }
+
+        public void setGender(String gender) {
+                this.gender = gender;
+        }
+
+        public String getPhone() {
+                return phone;
+        }
+
+        public void setPhone(String phone) {
+                this.phone = phone;
+        }
+
+        public MultipartFile getProfilePhoto() {
+                return profilePhoto;
+        }
+
+        public void setProfilePhoto(MultipartFile profilePhoto) {
+                this.profilePhoto = profilePhoto;
+        }
+
+        public String getWork() {
+                return work;
+        }
+
+        public void setWork(String work) {
+                this.work = work;
+        }
+
+        public Boolean getAuthorized() {
+                return authorized;
+        }
+
+        public void setAuthorized(Boolean authorized) {
+                this.authorized = authorized;
+        }
 }

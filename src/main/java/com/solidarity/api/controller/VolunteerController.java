@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -23,8 +24,13 @@ public class VolunteerController {
     }
 
     @PostMapping(path = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<VolunteerResponse> createVolunteer(@Valid @ModelAttribute VolunteerRequest volunteerRequest) {
+    public ResponseEntity<VolunteerResponse> createVolunteer(
+            @RequestPart("volunteer") @Valid VolunteerRequest volunteerRequest,
+            @RequestPart(value = "profilePhoto", required = false) MultipartFile profilePhoto) {
+
+        volunteerRequest.setProfilePhoto(profilePhoto);
         VolunteerResponse volunteerResponse = volunteerService.save(volunteerRequest);
+
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(volunteerResponse.id()).toUri();
         return ResponseEntity.created(uri).body(volunteerResponse);
     }

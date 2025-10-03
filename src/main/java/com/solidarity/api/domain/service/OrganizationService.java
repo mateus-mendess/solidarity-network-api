@@ -1,27 +1,24 @@
 package com.solidarity.api.domain.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solidarity.api.domain.entity.Address;
 import com.solidarity.api.domain.entity.Administrator;
 import com.solidarity.api.domain.entity.Organization;
 import com.solidarity.api.domain.entity.User;
 import com.solidarity.api.domain.repository.OrganizationDAO;
 import com.solidarity.api.dto.request.AdministratorRequest;
 import com.solidarity.api.dto.request.OrganizationRequest;
-import com.solidarity.api.dto.response.GeocodingResponse;
 import com.solidarity.api.dto.response.OrganizationResponse;
 import com.solidarity.api.enums.RolesStatus;
 import com.solidarity.api.exception.BusinessException;
-import com.solidarity.api.mapper.AddressMapper;
+import com.solidarity.api.exception.SolidarityException;
 import com.solidarity.api.mapper.OrganizationMapper;
 import com.solidarity.api.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,7 +33,6 @@ public class OrganizationService {
     private final FileStorageService fileStorageService;
     private final GeocodingService geocodingService;
     private final ObjectMapper objectMapper;
-    private final AddressMapper addressMapper;
     private final AdministratorService administratorService;
 
     public OrganizationService(OrganizationDAO organizationDAO,
@@ -46,7 +42,6 @@ public class OrganizationService {
                                FileStorageService fileStorageService,
                                GeocodingService geocodingService,
                                ObjectMapper objectMapper,
-                               AddressMapper addressMapper,
                                AdministratorService administratorService) {
         this.organizationDAO = organizationDAO;
         this.organizationMapper = organizationMapper;
@@ -55,33 +50,36 @@ public class OrganizationService {
         this.fileStorageService = fileStorageService;
         this.geocodingService = geocodingService;
         this.objectMapper = objectMapper;
-        this.addressMapper = addressMapper;
         this.administratorService = administratorService;
     }
 
     @Transactional
-    public OrganizationResponse save(OrganizationRequest organizationRequest) throws IOException, InterruptedException {
-        verifyExistsByCnpjAndPhone(organizationRequest.getCnpj(), organizationRequest.getPhone());
-        User user = userMapper.toUser(organizationRequest);
-        userService.save(user, RolesStatus.ROLE_ORGANIZATION);
-        Organization organization = organizationMapper.toOrganization(organizationRequest);
-        handleUploadPhoto(organizationRequest, organization);
-        String coordinates = geocodingService.getCoordinates(
-                organizationRequest.getAddress().getPostalCode(),
-                organizationRequest.getAddress().getNeighborhood(),
-                organizationRequest.getAddress().getStreet(),
-                organizationRequest.getAddress().getCity(),
-                organizationRequest.getAddress().getState()
-        );
-        JsonNode root = objectMapper.readTree(coordinates);
-        organization.setLatitude(root.get(0).get("lat").asDouble());
-        organization.setLongitude(root.get(0).get("lon").asDouble());
-        for (AdministratorRequest administratorRequest : organizationRequest.getAdministrators()) {
-            Administrator administrator = administratorService.save(administratorRequest);
-            organization.getAdministrators().add(administrator);
+    public OrganizationResponse save(OrganizationRequest organizationRequest) {
+        try {
+            verifyExistsByCnpjAndPhone(organizationRequest.getCnpj(), organizationRequest.getPhone());
+            User user = userMapper.toUser(organizationRequest);
+            userService.save(user, RolesStatus.ROLE_ORGANIZATION);
+            Organization organization = organizationMapper.toOrganization(organizationRequest);
+            handleUploadPhoto(organizationRequest, organization);
+            String coordinates = geocodingService.getCoordinates(
+                    organizationRequest.getAddress().getPostalCode(),
+                    organizationRequest.getAddress().getNeighborhood(),
+                    organizationRequest.getAddress().getStreet(),
+                    organizationRequest.getAddress().getCity(),
+                    organizationRequest.getAddress().getState()
+            );
+            JsonNode root = objectMapper.readTree(coordinates);
+            organization.setLatitude(root.get(0).get("lat").asDouble());
+            organization.setLongitude(root.get(0).get("lon").asDouble());
+            for (AdministratorRequest administratorRequest : organizationRequest.getAdministrators()) {
+                Administrator administrator = administratorService.save(administratorRequest);
+                organization.getAdministrators().add(administrator);
+            }
+            organization.setUser(user);
+            return organizationMapper.toOrganizationResponse(organizationDAO.save(organization));
+        } catch (IOException | InterruptedException exception) {
+            throw new SolidarityException("Unexpected technical error: " + exception.getMessage());
         }
-        organization.setUser(user);
-        return organizationMapper.toOrganizationResponse(organizationDAO.save(organization));
     }
 
     private void verifyExistsByCnpjAndPhone(String cnpj, String phone) {
