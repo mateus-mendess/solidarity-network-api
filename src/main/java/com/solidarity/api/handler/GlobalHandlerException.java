@@ -10,9 +10,12 @@ import com.solidarity.api.exception.SolidarityException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.List;
 
 @ControllerAdvice
 public class GlobalHandlerException {
@@ -54,6 +57,8 @@ public class GlobalHandlerException {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
+        List<String> globalErrors = exception.getBindingResult().getGlobalErrors().stream().map(ObjectError::getDefaultMessage).toList();
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation Error",
@@ -64,7 +69,8 @@ public class GlobalHandlerException {
                         .getFieldErrors()
                         .stream()
                         .map(errorValidation -> new ErrorDetailResponse(errorValidation.getField(), errorValidation.getDefaultMessage()))
-                        .toList()
+                        .toList(),
+                globalErrors
 
         );
 

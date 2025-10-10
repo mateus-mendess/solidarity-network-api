@@ -1,6 +1,5 @@
 package com.solidarity.api.domain.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solidarity.api.domain.entity.Administrator;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,6 +53,10 @@ public class OrganizationService {
         this.administratorService = administratorService;
     }
 
+    public List<OrganizationResponse> findAll() {
+        return organizationMapper.toListOrganizationResponse(organizationDAO.findAll());
+    }
+
     @Transactional
     public OrganizationResponse save(OrganizationRequest organizationRequest) {
         try {
@@ -78,7 +82,7 @@ public class OrganizationService {
             organization.setUser(user);
             return organizationMapper.toOrganizationResponse(organizationDAO.save(organization));
         } catch (IOException | InterruptedException exception) {
-            throw new SolidarityException("Unexpected technical error: " + exception.getMessage());
+            throw new SolidarityException("Unexpected technical error: " + exception);
         }
     }
 

@@ -1,18 +1,16 @@
 package com.solidarity.api.controller;
 
 import com.solidarity.api.domain.service.VolunteerService;
-import com.solidarity.api.dto.request.UserRequest;
 import com.solidarity.api.dto.request.VolunteerRequest;
 import com.solidarity.api.dto.response.VolunteerResponse;
 import jakarta.validation.Valid;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/volunteer")
 public class VolunteerController {
@@ -23,12 +21,8 @@ public class VolunteerController {
         this.volunteerService = volunteerService;
     }
 
-    @PostMapping(path = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<VolunteerResponse> createVolunteer(
-            @RequestPart("volunteer") @Valid VolunteerRequest volunteerRequest,
-            @RequestPart(value = "profilePhoto", required = false) MultipartFile profilePhoto) {
-
-        volunteerRequest.setProfilePhoto(profilePhoto);
+    @PostMapping("/register")
+    public ResponseEntity<VolunteerResponse> createVolunteer(@ModelAttribute @Valid VolunteerRequest volunteerRequest){
         VolunteerResponse volunteerResponse = volunteerService.save(volunteerRequest);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(volunteerResponse.id()).toUri();

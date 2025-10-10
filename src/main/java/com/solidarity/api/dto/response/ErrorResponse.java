@@ -14,8 +14,11 @@ public class ErrorResponse {
     private String message;
     private String path;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<ErrorDetailResponse> errorsDetails;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> globalErrors;
 
     public ErrorResponse(Integer status, String error, String message, String path) {
         this.timestamp = LocalDateTime.now();
@@ -25,12 +28,18 @@ public class ErrorResponse {
         this.path = path;
     }
 
-    public ErrorResponse(Integer status, String error, String message, String path, List<ErrorDetailResponse> errorsDetails) {
+    public ErrorResponse(Integer status,
+                         String error,
+                         String message,
+                         String path,
+                         List<ErrorDetailResponse> errorsDetails,
+                         List<String> globalErrors) {
         this.timestamp = LocalDateTime.now();
         this.status = status;
         this.error = error;
         this.message = message;
         this.path = path;
         this.errorsDetails = errorsDetails;
+        this.globalErrors = globalErrors;
     }
 }

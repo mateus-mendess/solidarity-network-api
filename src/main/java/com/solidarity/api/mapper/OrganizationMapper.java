@@ -6,6 +6,8 @@ import com.solidarity.api.dto.response.OrganizationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = {AddressMapper.class})
 public interface OrganizationMapper {
     @Mapping(target = "profilePhoto", ignore = true)
@@ -20,4 +22,7 @@ public interface OrganizationMapper {
 
     @Mapping(target = "email", source = "user.email")
     OrganizationResponse toOrganizationResponse(Organization organization);
+
+    @Mapping(target = "email", source = "user.email")
+    List<OrganizationResponse> toListOrganizationResponse(List<Organization> organizations);
 }
