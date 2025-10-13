@@ -1,10 +1,11 @@
-package com.solidarity.api.domain.entity;
+package com.solidarity.api.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "roles")
 @Entity
-public class Roles {
+public class Roles implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -23,4 +24,9 @@ public class Roles {
 
     @ManyToMany(mappedBy = "roles")
     private List<User> userList;
+
+    @Override
+    public String getAuthority() {
+        return name;
+    }
 }

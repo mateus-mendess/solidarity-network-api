@@ -1,6 +1,6 @@
 package com.solidarity.api.mapper;
 
-import com.solidarity.api.domain.entity.User;
+import com.solidarity.api.model.entity.User;
 import com.solidarity.api.dto.request.UserRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

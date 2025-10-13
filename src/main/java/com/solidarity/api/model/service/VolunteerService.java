@@ -1,8 +1,8 @@
-package com.solidarity.api.domain.service;
+package com.solidarity.api.model.service;
 
-import com.solidarity.api.domain.entity.User;
-import com.solidarity.api.domain.entity.Volunteer;
-import com.solidarity.api.domain.repository.VolunteerDAO;
+import com.solidarity.api.model.entity.User;
+import com.solidarity.api.model.entity.Volunteer;
+import com.solidarity.api.model.repository.VolunteerDAO;
 import com.solidarity.api.dto.request.VolunteerRequest;
 import com.solidarity.api.dto.response.VolunteerResponse;
 import com.solidarity.api.enums.RolesStatus;
@@ -12,6 +12,8 @@ import com.solidarity.api.mapper.UserMapper;
 import com.solidarity.api.mapper.VolunteerMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class VolunteerService {
@@ -35,6 +37,10 @@ public class VolunteerService {
         this.volunteerMapper = volunteerMapper;
         this.userMapper = userMapper;
         this.fileStorageService = fileStorageService;
+    }
+
+    public List<VolunteerResponse> getAllVolunteers() {
+        return volunteerMapper.toVolunteerResponseList(volunteerDAO.findAll());
     }
 
     @Transactional

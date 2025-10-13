@@ -1,4 +1,4 @@
-package com.solidarity.api.domain.service;
+package com.solidarity.api.model.service;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

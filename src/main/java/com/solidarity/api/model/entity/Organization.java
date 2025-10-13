@@ -1,4 +1,4 @@
-package com.solidarity.api.domain.entity;
+package com.solidarity.api.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

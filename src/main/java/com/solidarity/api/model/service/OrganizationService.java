@@ -1,11 +1,11 @@
-package com.solidarity.api.domain.service;
+package com.solidarity.api.model.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solidarity.api.domain.entity.Administrator;
-import com.solidarity.api.domain.entity.Organization;
-import com.solidarity.api.domain.entity.User;
-import com.solidarity.api.domain.repository.OrganizationDAO;
+import com.solidarity.api.model.entity.Administrator;
+import com.solidarity.api.model.entity.Organization;
+import com.solidarity.api.model.entity.User;
+import com.solidarity.api.model.repository.OrganizationDAO;
 import com.solidarity.api.dto.request.AdministratorRequest;
 import com.solidarity.api.dto.request.OrganizationRequest;
 import com.solidarity.api.dto.response.OrganizationResponse;

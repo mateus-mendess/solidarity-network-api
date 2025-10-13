@@ -1,6 +1,6 @@
-package com.solidarity.api.domain.repository;
+package com.solidarity.api.model.repository;
 
-import com.solidarity.api.domain.entity.Volunteer;
+import com.solidarity.api.model.entity.Volunteer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

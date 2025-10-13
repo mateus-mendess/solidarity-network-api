@@ -1,9 +1,9 @@
-package com.solidarity.api.domain.service;
+package com.solidarity.api.model.service;
 
-import com.solidarity.api.domain.entity.Roles;
-import com.solidarity.api.domain.entity.User;
-import com.solidarity.api.domain.repository.RolesDAO;
-import com.solidarity.api.domain.repository.UserDAO;
+import com.solidarity.api.model.entity.Roles;
+import com.solidarity.api.model.entity.User;
+import com.solidarity.api.model.repository.RolesDAO;
+import com.solidarity.api.model.repository.UserDAO;
 import com.solidarity.api.enums.RolesStatus;
 import com.solidarity.api.exception.BusinessException;
 import com.solidarity.api.exception.NotFoundException;

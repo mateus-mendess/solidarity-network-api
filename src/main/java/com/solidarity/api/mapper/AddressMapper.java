@@ -1,13 +1,11 @@
 package com.solidarity.api.mapper;
 
-import com.solidarity.api.domain.entity.Address;
+import com.solidarity.api.model.entity.Address;
 import com.solidarity.api.dto.request.AddressRequest;
 import com.solidarity.api.dto.response.GeocodingResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AddressMapper {

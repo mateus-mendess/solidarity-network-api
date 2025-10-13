@@ -1,7 +1,7 @@
-package com.solidarity.api.domain.service;
+package com.solidarity.api.model.service;
 
-import com.solidarity.api.domain.entity.Administrator;
-import com.solidarity.api.domain.repository.AdministratorDAO;
+import com.solidarity.api.model.entity.Administrator;
+import com.solidarity.api.model.repository.AdministratorDAO;
 import com.solidarity.api.dto.request.AdministratorRequest;
 import com.solidarity.api.exception.NotFoundException;
 import com.solidarity.api.mapper.AdministratorMapper;

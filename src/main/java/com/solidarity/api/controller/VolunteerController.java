@@ -1,14 +1,16 @@
 package com.solidarity.api.controller;
 
-import com.solidarity.api.domain.service.VolunteerService;
+import com.solidarity.api.model.service.VolunteerService;
 import com.solidarity.api.dto.request.VolunteerRequest;
 import com.solidarity.api.dto.response.VolunteerResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -19,6 +21,11 @@ public class VolunteerController {
 
     public VolunteerController(VolunteerService volunteerService) {
         this.volunteerService = volunteerService;
+    }
+
+    @GetMapping("/findAll")
+    public ResponseEntity<List<VolunteerResponse>> getAllVolunteers() {
+        return ResponseEntity.status(HttpStatus.OK).body(volunteerService.getAllVolunteers());
     }
 
     @PostMapping("/register")

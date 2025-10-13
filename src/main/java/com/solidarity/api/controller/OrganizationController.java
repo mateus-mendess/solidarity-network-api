@@ -1,6 +1,6 @@
 package com.solidarity.api.controller;
 
-import com.solidarity.api.domain.service.OrganizationService;
+import com.solidarity.api.model.service.OrganizationService;
 import com.solidarity.api.dto.request.OrganizationRequest;
 import com.solidarity.api.dto.response.OrganizationResponse;
 import jakarta.validation.Valid;

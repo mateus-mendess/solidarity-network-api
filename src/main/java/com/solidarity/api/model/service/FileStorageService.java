@@ -1,4 +1,4 @@
-package com.solidarity.api.domain.service;
+package com.solidarity.api.model.service;
 
 import com.solidarity.api.config.FileStorageConfig;
 import com.solidarity.api.exception.FileStorageException;

@@ -2,7 +2,7 @@ package com.solidarity.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solidarity.api.domain.service.GeocodingService;
+import com.solidarity.api.model.service.GeocodingService;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
