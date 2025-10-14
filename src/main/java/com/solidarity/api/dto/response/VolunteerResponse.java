@@ -7,7 +7,5 @@ public record VolunteerResponse(
         UUID id,
         String name,
         String lastName,
-        String email,
-        LocalDate birthday,
-        String gender
+        String profilePhoto
 ) {}

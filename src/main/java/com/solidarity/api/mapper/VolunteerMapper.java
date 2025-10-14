@@ -15,10 +15,8 @@ public interface VolunteerMapper {
     @Mapping(target = "gender", source = "gender")
     Volunteer toVolunteer(VolunteerRequest volunteerRequest);
 
-    @Mapping(target = "email", source = "user.email")
     VolunteerResponse toVolunteerResponse(Volunteer volunteer);
 
-    @Mapping(target = "email", source = "user.email")
     List<VolunteerResponse> toVolunteerResponseList(List<Volunteer> volunteers);
 
     default Gender map(String genderLabel) {

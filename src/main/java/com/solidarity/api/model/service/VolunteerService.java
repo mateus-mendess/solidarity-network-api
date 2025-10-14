@@ -46,10 +46,10 @@ public class VolunteerService {
     }
 
     public VolunteerResponse findVolunteerById(UUID id) {
-        return volunteerMapper.toVolunteerResponse(
-                volunteerDAO.findById(id)
-                        .orElseThrow(() -> new NotFoundException("Volunteer not found"))
-        );
+        Volunteer volunteer = volunteerDAO.findById(id).orElseThrow(() -> new NotFoundException("volunteer not found"));
+        volunteer.setProfilePhoto("http://localhost:8080/file/" + volunteer.getProfilePhoto());
+
+        return volunteerMapper.toVolunteerResponse(volunteer);
     }
 
     @Transactional

@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "volunteer/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "organization/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/organization/findAll").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/file/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(config -> config.jwt(Customizer.withDefaults()));
@@ -80,7 +81,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5174"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
         corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
