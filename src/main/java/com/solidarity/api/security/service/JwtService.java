@@ -1,5 +1,6 @@
 package com.solidarity.api.security.service;
 
+import com.solidarity.api.security.model.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -24,6 +25,8 @@ public class JwtService {
     public String generatorToken(Authentication authentication) {
         Instant now = Instant.now();
 
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
         String scopes = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
@@ -34,6 +37,7 @@ public class JwtService {
                 .expiresAt(now.plusSeconds(TOKEN_EXPIRATION_SECONDS))
                 .subject(authentication.getName())
                 .claim("scope", scopes)
+                .claim("userId", userDetails.getId().toString())
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

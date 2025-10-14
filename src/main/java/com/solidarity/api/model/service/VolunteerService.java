@@ -1,5 +1,6 @@
 package com.solidarity.api.model.service;
 
+import com.solidarity.api.exception.NotFoundException;
 import com.solidarity.api.model.entity.User;
 import com.solidarity.api.model.entity.Volunteer;
 import com.solidarity.api.model.repository.VolunteerDAO;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VolunteerService {
@@ -41,6 +43,13 @@ public class VolunteerService {
 
     public List<VolunteerResponse> getAllVolunteers() {
         return volunteerMapper.toVolunteerResponseList(volunteerDAO.findAll());
+    }
+
+    public VolunteerResponse findVolunteerById(UUID id) {
+        return volunteerMapper.toVolunteerResponse(
+                volunteerDAO.findById(id)
+                        .orElseThrow(() -> new NotFoundException("Volunteer not found"))
+        );
     }
 
     @Transactional
