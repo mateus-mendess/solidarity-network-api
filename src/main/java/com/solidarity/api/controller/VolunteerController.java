@@ -44,9 +44,19 @@ public class VolunteerController {
 
     @PostMapping("/register")
     public ResponseEntity<VolunteerResponse> createVolunteer(@ModelAttribute @Valid VolunteerRequest volunteerRequest){
-        VolunteerResponse volunteerResponse = volunteerService.save(volunteerRequest);
+        VolunteerResponse volunteerResponse = volunteerService.saveVolunteer(volunteerRequest);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(volunteerResponse.id()).toUri();
+
         return ResponseEntity.created(uri).body(volunteerResponse);
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteVolunteer(@AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getClaim("userId"));
+
+        volunteerService.deleteVolunteer(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -20,7 +20,7 @@ public class Volunteer {
     @Id
     private UUID id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @MapsId
     @JoinColumn(name = "id")
     private User user;

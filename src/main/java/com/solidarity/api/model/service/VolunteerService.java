@@ -53,7 +53,7 @@ public class VolunteerService {
     }
 
     @Transactional
-    public VolunteerResponse save(VolunteerRequest volunteerRequest) {
+    public VolunteerResponse saveVolunteer(VolunteerRequest volunteerRequest) {
         try {
             verifyIfCpfAlreadyExists(volunteerRequest.getCpf());
             User user = userMapper.toUser(volunteerRequest);
@@ -67,6 +67,13 @@ public class VolunteerService {
         } catch (SolidarityException exception) {
             throw new SolidarityException("Unexpected technical error: " + exception.getMessage());
         }
+    }
+
+    @Transactional
+    public void deleteVolunteer(UUID id) {
+        Volunteer volunteer = volunteerDAO.findById(id)
+                .orElseThrow(() -> new NotFoundException("volunteer not found"));
+        volunteerDAO.delete(volunteer);
     }
 
     private void verifyIfCpfAlreadyExists(String cpf) {
