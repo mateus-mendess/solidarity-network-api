@@ -45,8 +45,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "volunteer/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "organization/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/volunteer/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/organization/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/organization/findAll").permitAll()
                         .requestMatchers(HttpMethod.GET, "/file/**").permitAll()
                         .anyRequest().authenticated())
@@ -82,7 +82,7 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
-        corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "PATCH", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

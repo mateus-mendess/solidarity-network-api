@@ -70,6 +70,16 @@ public class VolunteerService {
     }
 
     @Transactional
+    public void updateVolunteer(UUID userId, VolunteerRequest volunteerRequest) {
+        Volunteer volunteer = volunteerDAO.findById(userId)
+                .orElseThrow(() -> new NotFoundException("volunteer not found"));
+
+        volunteerMapper.updateVolunteerFromRequest(volunteerRequest, volunteer);
+
+        volunteerDAO.save(volunteer);
+    }
+
+    @Transactional
     public void deleteVolunteer(UUID id) {
         Volunteer volunteer = volunteerDAO.findById(id)
                 .orElseThrow(() -> new NotFoundException("volunteer not found"));
