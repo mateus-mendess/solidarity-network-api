@@ -83,6 +83,8 @@ public class VolunteerService {
     public void deleteVolunteer(UUID id) {
         Volunteer volunteer = volunteerDAO.findById(id)
                 .orElseThrow(() -> new NotFoundException("volunteer not found"));
+
+        fileStorageService.deleteFile(volunteer.getProfilePhoto());
         volunteerDAO.delete(volunteer);
     }
 

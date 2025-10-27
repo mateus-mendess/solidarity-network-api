@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
@@ -53,6 +54,25 @@ public class FileStorageService {
             }
         } catch (MalformedURLException exception) {
             throw new SolidarityException("Error: " + exception);
+        }
+    }
+
+    public void deleteFile(String relativePath) {
+        try {
+            if (relativePath != null) {
+                String decodedPath = URLDecoder.decode(relativePath, StandardCharsets.UTF_8);
+                Path filePath = fileStorageLocation.resolve(decodedPath).normalize();
+
+                File file = filePath.toFile();
+                if (file.exists()) {
+                    boolean deleted = file.delete();
+                    if (!deleted) {
+                        throw new FileStorageException("Failed to delete file");
+                    }
+                }
+            }
+        } catch (Exception exception) {
+            throw new FileStorageException("Error deleting file: " + exception.getMessage());
         }
     }
 }

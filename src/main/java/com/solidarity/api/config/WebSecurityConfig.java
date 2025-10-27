@@ -44,12 +44,10 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/volunteer/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/organization/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/organization/findAll").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/file/**").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.POST, "/volunteer/profile").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/volunteer").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/volunteer").authenticated()
+                        .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(config -> config.jwt(Customizer.withDefaults()));
 
