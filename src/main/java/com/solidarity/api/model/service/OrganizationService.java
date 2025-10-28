@@ -2,6 +2,7 @@ package com.solidarity.api.model.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.solidarity.api.exception.NotFoundException;
 import com.solidarity.api.model.entity.Administrator;
 import com.solidarity.api.model.entity.Organization;
 import com.solidarity.api.model.entity.User;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OrganizationService {
@@ -84,6 +86,13 @@ public class OrganizationService {
         } catch (IOException | InterruptedException exception) {
             throw new SolidarityException("Unexpected technical error: " + exception);
         }
+    }
+
+    public void updateOrganization(UUID userId, OrganizationRequest organizationRequest) {
+        Organization organization = organizationDAO.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Organization not found."));
+
+        organizationMapper.toUpdateOrganization(organizationRequest, organization);
     }
 
     private void verifyExistsByCnpjAndPhone(String cnpj, String phone) {

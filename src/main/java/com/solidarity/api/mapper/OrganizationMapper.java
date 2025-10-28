@@ -5,10 +5,12 @@ import com.solidarity.api.dto.request.OrganizationRequest;
 import com.solidarity.api.dto.response.OrganizationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {AddressMapper.class})
+@Mapper(componentModel = "spring", uses = {AddressMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface OrganizationMapper {
     @Mapping(target = "profilePhoto", ignore = true)
     @Mapping(target = "coverPhoto", ignore = true)
@@ -25,4 +27,8 @@ public interface OrganizationMapper {
 
     @Mapping(target = "email", source = "user.email")
     List<OrganizationResponse> toListOrganizationResponse(List<Organization> organizations);
+
+    @Mapping(target = "profilePhoto", ignore = true)
+    @Mapping(target = "coverPhoto", ignore = true)
+    void toUpdateOrganization(OrganizationRequest organizationRequest, @MappingTarget Organization organization);
 }

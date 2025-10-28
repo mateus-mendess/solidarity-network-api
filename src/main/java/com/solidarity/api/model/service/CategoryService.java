@@ -20,6 +20,6 @@ public class CategoryService {
     }
 
     public List<CategoryResponse> getAllCategories() {
-        return categoryMapper.categoryResponseList(categoryDAO.findAll());
+        return categoryMapper.toCategoryResponseList(categoryDAO.findAll());
     }
 }

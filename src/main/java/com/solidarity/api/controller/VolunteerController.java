@@ -48,7 +48,7 @@ public class VolunteerController {
     }
 
     @PatchMapping
-    public ResponseEntity updateVolunteer(@AuthenticationPrincipal Jwt jwt, @RequestBody VolunteerRequest volunteerRequest) {
+    public ResponseEntity updateVolunteer(@AuthenticationPrincipal Jwt jwt, @RequestBody @Valid VolunteerRequest volunteerRequest) {
         UUID userId = UUID.fromString(jwt.getClaim("userId"));
 
         volunteerService.updateVolunteer(userId, volunteerRequest);
