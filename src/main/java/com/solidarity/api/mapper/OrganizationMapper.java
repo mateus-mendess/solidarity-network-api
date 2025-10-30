@@ -1,5 +1,6 @@
 package com.solidarity.api.mapper;
 
+import com.solidarity.api.dto.request.OrganizationUpdateRequest;
 import com.solidarity.api.model.entity.Organization;
 import com.solidarity.api.dto.request.OrganizationRequest;
 import com.solidarity.api.dto.response.OrganizationResponse;
@@ -28,7 +29,5 @@ public interface OrganizationMapper {
     @Mapping(target = "email", source = "user.email")
     List<OrganizationResponse> toListOrganizationResponse(List<Organization> organizations);
 
-    @Mapping(target = "profilePhoto", ignore = true)
-    @Mapping(target = "coverPhoto", ignore = true)
-    void toUpdateOrganization(OrganizationRequest organizationRequest, @MappingTarget Organization organization);
+    void toUpdateOrganization(OrganizationUpdateRequest organizationUpdateRequest, @MappingTarget Organization organization);
 }

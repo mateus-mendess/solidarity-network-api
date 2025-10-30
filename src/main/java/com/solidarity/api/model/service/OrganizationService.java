@@ -2,6 +2,7 @@ package com.solidarity.api.model.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.solidarity.api.dto.request.OrganizationUpdateRequest;
 import com.solidarity.api.exception.NotFoundException;
 import com.solidarity.api.model.entity.Administrator;
 import com.solidarity.api.model.entity.Organization;
@@ -67,13 +68,7 @@ public class OrganizationService {
             userService.save(user, RolesStatus.ROLE_ORGANIZATION);
             Organization organization = organizationMapper.toOrganization(organizationRequest);
             handleUploadPhoto(organizationRequest, organization);
-            String coordinates = geocodingService.getCoordinates(
-                    organizationRequest.getAddress().getPostalCode(),
-                    organizationRequest.getAddress().getNeighborhood(),
-                    organizationRequest.getAddress().getStreet(),
-                    organizationRequest.getAddress().getCity(),
-                    organizationRequest.getAddress().getState()
-            );
+            String coordinates = geocodingService.getCoordinates(organizationRequest.getAddress());
             JsonNode root = objectMapper.readTree(coordinates);
             organization.setLatitude(root.get(0).get("lat").asDouble());
             organization.setLongitude(root.get(0).get("lon").asDouble());
@@ -88,11 +83,14 @@ public class OrganizationService {
         }
     }
 
-    public void updateOrganization(UUID userId, OrganizationRequest organizationRequest) {
+    @Transactional
+    public void updateOrganization(UUID userId, OrganizationUpdateRequest organizationUpdateRequest) {
         Organization organization = organizationDAO.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Organization not found."));
 
-        organizationMapper.toUpdateOrganization(organizationRequest, organization);
+        organizationMapper.toUpdateOrganization(organizationUpdateRequest, organization);
+
+        organizationDAO.save(organization);
     }
 
     private void verifyExistsByCnpjAndPhone(String cnpj, String phone) {

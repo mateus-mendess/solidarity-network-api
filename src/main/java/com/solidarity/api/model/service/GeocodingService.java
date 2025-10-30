@@ -1,4 +1,5 @@
 package com.solidarity.api.model.service;
+import com.solidarity.api.dto.request.AddressRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,14 +15,14 @@ public class GeocodingService {
 
     private static final String NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 
-    public String getCoordinates(String postalCode, String neighborhood, String street, String city, String state) throws IOException, InterruptedException {
+    public String getCoordinates(AddressRequest addressRequest) throws IOException, InterruptedException {
         String url = String.format("%s?street=%s&neighborhood=%s&city=%s&state=%s&postalcode=%s&format=jsonv2",
                 NOMINATIM_URL,
-                encode(street),
-                encode(neighborhood),
-                encode(city),
-                encode(state),
-                encode(postalCode)
+                encode(addressRequest.getStreet()),
+                encode(addressRequest.getNeighborhood()),
+                encode(addressRequest.getCity()),
+                encode(addressRequest.getState()),
+                encode(addressRequest.getPostalCode())
         );
 
         HttpClient client = HttpClient.newHttpClient();

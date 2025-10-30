@@ -26,10 +26,6 @@ public class UserService {
         this.rolesDAO = rolesDAO;
     }
 
-    public User findByEmail(String email) {
-        return userDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("user not found."));
-    }
-
     @Transactional
     public void save(User user, RolesStatus rolesStatus) {
         verifyIfEmailAlreadyExists(user.getEmail());
@@ -42,12 +38,6 @@ public class UserService {
     private void verifyIfEmailAlreadyExists(String email) {
         if (userDAO.findByEmail(email).isPresent()) {
             throw new BusinessException("Email already registered");
-        }
-    }
-
-    private void validatePasswordMatch(String password, String confirmPassword) {
-        if (!password.equals(confirmPassword)) {
-            throw new IllegalArgumentException("password and password confirmation must be the same");
         }
     }
 }

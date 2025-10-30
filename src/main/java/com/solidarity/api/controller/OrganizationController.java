@@ -1,10 +1,10 @@
 package com.solidarity.api.controller;
 
+import com.solidarity.api.dto.request.OrganizationUpdateRequest;
 import com.solidarity.api.model.service.OrganizationService;
 import com.solidarity.api.dto.request.OrganizationRequest;
 import com.solidarity.api.dto.response.OrganizationResponse;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -27,16 +26,10 @@ public class OrganizationController {
         this.organizationService = organizationService;
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<List<OrganizationResponse>> getOrganization() {
-        return ResponseEntity.status(HttpStatus.OK).body(organizationService.findAll());
-    }
-
     @PostMapping("/register")
     public ResponseEntity<OrganizationResponse> createOrganization(@RequestPart("organization") @Valid OrganizationRequest organizationRequest,
                                                                    @RequestPart(value = "profilePhoto", required = false) MultipartFile profilePhoto,
                                                                    @RequestPart(value = "coverPhoto", required = false) MultipartFile coverPhoto) {
-
         organizationRequest.setProfilePhoto(profilePhoto);
         organizationRequest.setCoverPhoto(coverPhoto);
 
@@ -47,10 +40,10 @@ public class OrganizationController {
     }
 
     @PatchMapping
-    public ResponseEntity<OrganizationResponse> updateOrganization(@AuthenticationPrincipal Jwt jwt, @RequestBody @Valid OrganizationRequest organizationRequest) {
-        UUID userId = UUID.fromString(jwt.getClaim("id"));
+    public ResponseEntity<OrganizationResponse> updateOrganization(@AuthenticationPrincipal Jwt jwt, @RequestBody @Valid OrganizationUpdateRequest organizationUpdateRequest) {
+        UUID userId = UUID.fromString(jwt.getClaim("userId"));
 
-        organizationService.updateOrganization(userId, organizationRequest);
+        organizationService.updateOrganization(userId, organizationUpdateRequest);
 
         return ResponseEntity.ok().build();
     }
