@@ -20,7 +20,7 @@ public class Organization {
     @Id
     private UUID id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @MapsId
     @JoinColumn(name = "id")
     private User user;
@@ -42,12 +42,7 @@ public class Organization {
     private Double latitude;
     private Double longitude;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "organization_administrator",
-            joinColumns = @JoinColumn(name = "organization_id"),
-            inverseJoinColumns = @JoinColumn(name = "administrator_id")
-    )
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Administrator> administrators = new ArrayList<>();
 
     public UUID getId() {

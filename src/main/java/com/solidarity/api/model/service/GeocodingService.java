@@ -1,4 +1,7 @@
 package com.solidarity.api.model.service;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.solidarity.api.Utils.Coordinates;
 import com.solidarity.api.dto.request.AddressRequest;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +17,13 @@ import java.nio.charset.StandardCharsets;
 public class GeocodingService {
 
     private static final String NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
+    private final ObjectMapper objectMapper;
 
-    public String getCoordinates(AddressRequest addressRequest) throws IOException, InterruptedException {
+    public GeocodingService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public Coordinates getCoordinates(AddressRequest addressRequest) throws IOException, InterruptedException {
         String url = String.format("%s?street=%s&neighborhood=%s&city=%s&state=%s&postalcode=%s&format=jsonv2",
                 NOMINATIM_URL,
                 encode(addressRequest.getStreet()),
@@ -34,7 +42,11 @@ public class GeocodingService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        return response.body();
+        JsonNode root = objectMapper.readTree(response.body());
+        Double latitude = root.get(0).get("lat").asDouble();
+        Double longitude = root.get(0).get("lon").asDouble();
+
+        return new Coordinates(latitude, longitude);
     }
 
     private String encode(String value) {

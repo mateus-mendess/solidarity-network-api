@@ -13,9 +13,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class AdministratorRequest {
-    @NotBlank
-    @CPF(message = "Invalid CPF")
-    private String cpf;
 
     @NotBlank
     @Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ]+(?: [A-Za-zÀ-ÖØ-öø-ÿ]+)*$",
@@ -66,13 +63,5 @@ public class AdministratorRequest {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 }

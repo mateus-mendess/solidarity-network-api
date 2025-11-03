@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Service
 public class FileStorageService {
@@ -28,16 +29,20 @@ public class FileStorageService {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
     }
 
-    public String uploadFile(MultipartFile file, String subFolder) {
-        String fileName = UUID.randomUUID() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
+    public void uploadFile(MultipartFile file, String subFolder, Consumer<String> setter) {
+        if (file != null && !file.isEmpty() ) {
+            String fileName = UUID.randomUUID() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
 
-        try {
-            Path folder = fileStorageLocation.resolve(subFolder);
-            Path targetLocation = folder.resolve(fileName);
-            file.transferTo(targetLocation);
-            return subFolder + "/" +fileName;
-        } catch (IOException exception) {
-            throw new FileStorageException("Error saving file");
+            try {
+                Path folder = fileStorageLocation.resolve(subFolder);
+                Path targetLocation = folder.resolve(fileName);
+
+                file.transferTo(targetLocation);
+
+                setter.accept(subFolder + "/" +fileName);
+            } catch (IOException exception) {
+                throw new FileStorageException("Error saving file");
+            }
         }
     }
 
@@ -45,6 +50,7 @@ public class FileStorageService {
         try {
             String decodePath = URLDecoder.decode(relativePath, StandardCharsets.UTF_8);
             Path filePath = fileStorageLocation.resolve(decodePath).normalize();
+
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists()) {
@@ -64,6 +70,7 @@ public class FileStorageService {
                 Path filePath = fileStorageLocation.resolve(decodedPath).normalize();
 
                 File file = filePath.toFile();
+
                 if (file.exists()) {
                     boolean deleted = file.delete();
                     if (!deleted) {

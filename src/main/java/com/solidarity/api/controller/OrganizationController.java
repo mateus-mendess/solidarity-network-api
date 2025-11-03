@@ -40,10 +40,19 @@ public class OrganizationController {
     }
 
     @PatchMapping
-    public ResponseEntity<OrganizationResponse> updateOrganization(@AuthenticationPrincipal Jwt jwt, @RequestBody @Valid OrganizationUpdateRequest organizationUpdateRequest) {
+    public ResponseEntity updateOrganization(@AuthenticationPrincipal Jwt jwt, @RequestBody @Valid OrganizationUpdateRequest organizationUpdateRequest) {
         UUID userId = UUID.fromString(jwt.getClaim("userId"));
 
         organizationService.updateOrganization(userId, organizationUpdateRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteOrganization(@AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getClaim("userId"));
+
+        organizationService.deleteOrganization(userId);
 
         return ResponseEntity.ok().build();
     }

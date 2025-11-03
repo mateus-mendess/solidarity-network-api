@@ -23,8 +23,6 @@ public class Administrator {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String cpf;
-
     private String name;
 
     @Column(name = "last_name")
@@ -34,8 +32,9 @@ public class Administrator {
 
     private String gender;
 
-    @ManyToMany(mappedBy = "administrators")
-    private List<Organization> organizations = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     public UUID getId() {
         return id;
@@ -43,14 +42,6 @@ public class Administrator {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 
     public String getName() {
@@ -85,11 +76,11 @@ public class Administrator {
         this.gender = gender;
     }
 
-    public List<Organization> getOrganizations() {
-        return organizations;
+    public Organization getOrganization() {
+        return organization;
     }
 
-    public void setOrganizations(List<Organization> organizations) {
-        this.organizations = organizations;
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

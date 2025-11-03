@@ -56,10 +56,13 @@ public class VolunteerService {
     public VolunteerResponse saveVolunteer(VolunteerRequest volunteerRequest) {
         try {
             verifyIfCpfAlreadyExists(volunteerRequest.getCpf());
+
             User user = userMapper.toUser(volunteerRequest);
             userService.save(user, RolesStatus.ROLE_VOLUNTEER);
+
             Volunteer volunteer = volunteerMapper.toVolunteer(volunteerRequest);
             handleUploadPhoto(volunteerRequest, volunteer);
+
             volunteer.setUser(user);
             return volunteerMapper.toVolunteerResponse(volunteerDAO.save(volunteer));
         } catch (BusinessException exception) {
@@ -94,9 +97,7 @@ public class VolunteerService {
         }
     }
 
-    private void handleUploadPhoto(VolunteerRequest volunteerRequest, Volunteer volunteer) {
-        if (volunteerRequest.getProfilePhoto() != null && !volunteerRequest.getProfilePhoto().isEmpty()) {
-            volunteer.setProfilePhoto(fileStorageService.uploadFile(volunteerRequest.getProfilePhoto(), VOLUNTEER_PROFILE_PHOTO_PATH));
-        }
+    private void uploadVolunteerPhotos(VolunteerRequest volunteerRequest, Volunteer volunteer) {
+        fileStorageService.uploadFile(volunteerRequest.getProfilePhoto(), VOLUNTEER_PROFILE_PHOTO_PATH, volunteer::setProfilePhoto);
     }
 }

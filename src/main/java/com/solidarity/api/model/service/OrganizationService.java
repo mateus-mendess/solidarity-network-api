@@ -1,14 +1,11 @@
 package com.solidarity.api.model.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.solidarity.api.Utils.Coordinates;
 import com.solidarity.api.dto.request.OrganizationUpdateRequest;
 import com.solidarity.api.exception.NotFoundException;
-import com.solidarity.api.model.entity.Administrator;
 import com.solidarity.api.model.entity.Organization;
 import com.solidarity.api.model.entity.User;
 import com.solidarity.api.model.repository.OrganizationDAO;
-import com.solidarity.api.dto.request.AdministratorRequest;
 import com.solidarity.api.dto.request.OrganizationRequest;
 import com.solidarity.api.dto.response.OrganizationResponse;
 import com.solidarity.api.enums.RolesStatus;
@@ -35,7 +32,6 @@ public class OrganizationService {
     private final UserMapper userMapper;
     private final FileStorageService fileStorageService;
     private final GeocodingService geocodingService;
-    private final ObjectMapper objectMapper;
     private final AdministratorService administratorService;
 
     public OrganizationService(OrganizationDAO organizationDAO,
@@ -44,7 +40,6 @@ public class OrganizationService {
                                UserMapper userMapper,
                                FileStorageService fileStorageService,
                                GeocodingService geocodingService,
-                               ObjectMapper objectMapper,
                                AdministratorService administratorService) {
         this.organizationDAO = organizationDAO;
         this.organizationMapper = organizationMapper;
@@ -52,7 +47,6 @@ public class OrganizationService {
         this.userMapper = userMapper;
         this.fileStorageService = fileStorageService;
         this.geocodingService = geocodingService;
-        this.objectMapper = objectMapper;
         this.administratorService = administratorService;
     }
 
@@ -64,19 +58,20 @@ public class OrganizationService {
     public OrganizationResponse save(OrganizationRequest organizationRequest) {
         try {
             verifyExistsByCnpjAndPhone(organizationRequest.getCnpj(), organizationRequest.getPhone());
+
             User user = userMapper.toUser(organizationRequest);
             userService.save(user, RolesStatus.ROLE_ORGANIZATION);
+
             Organization organization = organizationMapper.toOrganization(organizationRequest);
-            handleUploadPhoto(organizationRequest, organization);
-            String coordinates = geocodingService.getCoordinates(organizationRequest.getAddress());
-            JsonNode root = objectMapper.readTree(coordinates);
-            organization.setLatitude(root.get(0).get("lat").asDouble());
-            organization.setLongitude(root.get(0).get("lon").asDouble());
-            for (AdministratorRequest administratorRequest : organizationRequest.getAdministrators()) {
-                Administrator administrator = administratorService.save(administratorRequest);
-                organization.getAdministrators().add(administrator);
-            }
+            uploadOrganizationPhotos(organizationRequest, organization);
+
+            Coordinates coordinates = geocodingService.getCoordinates(organizationRequest.getAddress());
+            organization.setLatitude(coordinates.latitude());
+            organization.setLongitude(coordinates.longitude());
+
             organization.setUser(user);
+            administratorService.addAdministratorsToOrganization(organizationRequest.getAdministrators(), organization);
+
             return organizationMapper.toOrganizationResponse(organizationDAO.save(organization));
         } catch (IOException | InterruptedException exception) {
             throw new SolidarityException("Unexpected technical error: " + exception);
@@ -93,6 +88,17 @@ public class OrganizationService {
         organizationDAO.save(organization);
     }
 
+    @Transactional
+    public void deleteOrganization(UUID userId) {
+        Organization organization = organizationDAO.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Organization not found."));
+
+        fileStorageService.deleteFile(organization.getProfilePhoto());
+        fileStorageService.deleteFile(organization.getCoverPhoto());
+
+        organizationDAO.delete(organization);
+    }
+
     private void verifyExistsByCnpjAndPhone(String cnpj, String phone) {
         Optional<Organization> organization = organizationDAO.findByCnpjOrPhone(cnpj, phone);
         if(organization.isPresent()) {
@@ -106,13 +112,8 @@ public class OrganizationService {
         }
     }
 
-    private void handleUploadPhoto (OrganizationRequest organizationRequest, Organization organization) {
-        if (organizationRequest.getProfilePhoto() != null && !organizationRequest.getProfilePhoto().isEmpty()) {
-            organization.setProfilePhoto(fileStorageService.uploadFile(organizationRequest.getProfilePhoto(), ORGANIZATION_PROFILE_PHOTO_PATH));
-        }
-
-        if (organizationRequest.getCoverPhoto() != null && !organizationRequest.getCoverPhoto().isEmpty()) {
-            organization.setCoverPhoto(fileStorageService.uploadFile(organizationRequest.getCoverPhoto(), ORGANIZATION_COVER_PHOTO_PATH));
-        }
+    private void uploadOrganizationPhotos (OrganizationRequest organizationRequest, Organization organization) {
+        fileStorageService.uploadFile(organizationRequest.getProfilePhoto(), ORGANIZATION_PROFILE_PHOTO_PATH, organization::setProfilePhoto);
+        fileStorageService.uploadFile(organizationRequest.getCoverPhoto(), ORGANIZATION_COVER_PHOTO_PATH, organization::setCoverPhoto);
     }
 }

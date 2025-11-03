@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/volunteer").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/volunteer").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/organization").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/organization").authenticated()
                         .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(config -> config.jwt(Customizer.withDefaults()));
