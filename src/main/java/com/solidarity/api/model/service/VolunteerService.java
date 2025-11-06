@@ -61,7 +61,7 @@ public class VolunteerService {
             userService.save(user, RolesStatus.ROLE_VOLUNTEER);
 
             Volunteer volunteer = volunteerMapper.toVolunteer(volunteerRequest);
-            handleUploadPhoto(volunteerRequest, volunteer);
+            uploadVolunteerPhotos(volunteerRequest, volunteer);
 
             volunteer.setUser(user);
             return volunteerMapper.toVolunteerResponse(volunteerDAO.save(volunteer));

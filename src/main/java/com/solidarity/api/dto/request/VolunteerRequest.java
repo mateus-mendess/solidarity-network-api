@@ -1,5 +1,6 @@
 package com.solidarity.api.dto.request;
 
+import com.solidarity.api.enums.Gender;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,9 +31,7 @@ public class VolunteerRequest extends UserRequest{
         private LocalDate birthday;
 
         @NotBlank
-        @Pattern(regexp = "^(?i)(male|female|other)$",
-        message = "Gender provided is invalid")
-        private String gender;
+        private Gender gender;
 
         @NotBlank
         @Pattern(regexp = "^\\(\\d{2}\\)\\d{4,5}-\\d{4}$",
@@ -81,11 +80,11 @@ public class VolunteerRequest extends UserRequest{
                 this.birthday = birthday;
         }
 
-        public String getGender() {
+        public Gender getGender() {
                 return gender;
         }
 
-        public void setGender(String gender) {
+        public void setGender(Gender gender) {
                 this.gender = gender;
         }
 
