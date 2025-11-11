@@ -61,4 +61,6 @@ public class AddressRequest {
     public void setCity(String city) {
         this.city = city;
     }
+
+
 }

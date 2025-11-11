@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -33,6 +31,12 @@ public class Organization {
     private String coverPhoto;
     private String websiteUrl;
 
+    @ManyToMany
+    @JoinTable(name = "organization_category",
+    joinColumns = @JoinColumn(name = "organization_id"),
+    inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
+
     @Column(name = "postal_code")
     private String postalCode;
     private String neighborhood;
@@ -44,6 +48,9 @@ public class Organization {
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Administrator> administrators = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SocialAction> socialActions = new ArrayList<>();
 
     public UUID getId() {
         return id;
@@ -117,6 +124,14 @@ public class Organization {
         this.websiteUrl = websiteUrl;
     }
 
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
     public String getPostalCode() {
         return postalCode;
     }
@@ -179,5 +194,13 @@ public class Organization {
 
     public void setAdministrators(List<Administrator> administrators) {
         this.administrators = administrators;
+    }
+
+    public List<SocialAction> getSocialActions() {
+        return socialActions;
+    }
+
+    public void setSocialActions(List<SocialAction> socialActions) {
+        this.socialActions = socialActions;
     }
 }

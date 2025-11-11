@@ -1,6 +1,6 @@
 package com.solidarity.api.model.service;
 
-import com.solidarity.api.Utils.Coordinates;
+import com.solidarity.api.dto.response.CoordinatesResponse;
 import com.solidarity.api.dto.request.OrganizationUpdateRequest;
 import com.solidarity.api.exception.NotFoundException;
 import com.solidarity.api.model.entity.Organization;
@@ -65,7 +65,7 @@ public class OrganizationService {
             Organization organization = organizationMapper.toOrganization(organizationRequest);
             uploadOrganizationPhotos(organizationRequest, organization);
 
-            Coordinates coordinates = geocodingService.getCoordinates(organizationRequest.getAddress());
+            CoordinatesResponse coordinates = geocodingService.getCoordinates(organizationRequest.getAddress());
             organization.setLatitude(coordinates.latitude());
             organization.setLongitude(coordinates.longitude());
 

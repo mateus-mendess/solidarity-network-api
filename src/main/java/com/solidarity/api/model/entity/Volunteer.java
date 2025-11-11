@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -26,25 +29,26 @@ public class Volunteer {
     private User user;
 
     private String cpf;
-
     private String name;
 
     @Column(name = "last_name")
     private String lastName;
-
     private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
     private String phone;
 
     @Column(name = "profile_photo")
     private String profilePhoto;
-
     private String work;
-
     private Boolean authorized;
+
+    @ManyToMany
+    @JoinTable(name = "volunteer_category",
+    joinColumns = @JoinColumn(name = "volunteer_id"),
+    inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
 
     public UUID getId() {
         return id;
@@ -132,5 +136,13 @@ public class Volunteer {
 
     public void setAuthorized(Boolean authorized) {
         this.authorized = authorized;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 }

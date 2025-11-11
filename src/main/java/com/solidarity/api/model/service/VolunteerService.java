@@ -19,7 +19,6 @@ import java.util.UUID;
 
 @Service
 public class VolunteerService {
-
     private static final String VOLUNTEER_PROFILE_PHOTO_PATH = "volunteer/profile-photo";
 
     private final UserService userService;

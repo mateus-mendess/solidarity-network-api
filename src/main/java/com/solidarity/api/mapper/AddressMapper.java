@@ -1,8 +1,8 @@
 package com.solidarity.api.mapper;
 
+import com.solidarity.api.dto.response.CoordinatesResponse;
 import com.solidarity.api.model.entity.Address;
 import com.solidarity.api.dto.request.AddressRequest;
-import com.solidarity.api.dto.response.GeocodingResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -11,9 +11,9 @@ import org.mapstruct.Named;
 public interface AddressMapper {
     Address toAddress(AddressRequest addressRequest);
 
-    @Mapping(target = "latitude", source = "lat", qualifiedByName = "ToDouble")
-    @Mapping(target = "longitude", source = "lon", qualifiedByName = "ToDouble")
-    Address getCoordinatesToAddress(GeocodingResponse geocodingResponse);
+    @Mapping(target = "latitude", source = "latitude", qualifiedByName = "ToDouble")
+    @Mapping(target = "longitude", source = "longitude", qualifiedByName = "ToDouble")
+    Address getCoordinatesToAddress(CoordinatesResponse coordinatesResponse);
 
     @Named("ToDouble")
     default Double ToDouble(String value) {
